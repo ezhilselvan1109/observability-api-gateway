@@ -1,0 +1,59 @@
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: ${USER_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/api/users/**
+        - id: order-service
+          uri: ${ORDER_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/orders/**
+        - id: notification-service
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/notifications/**
+        - id: openapi-user
+          uri: ${USER_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/user-service/v3/api-docs
+          filters:
+            - RewritePath=/user-service/v3/api-docs, /v3/api-docs
+        - id: openapi-order
+          uri: ${ORDER_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/order-service/v3/api-docs
+          filters:
+            - RewritePath=/order-service/v3/api-docs, /v3/api-docs
+        - id: openapi-notification
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/notification-service/v3/api-docs
+          filters:
+            - RewritePath=/notification-service/v3/api-docs, /v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: User Service
+        url: /user-service/v3/api-docs
+      - name: Order Service
+        url: /order-service/v3/api-docs
+      - name: Notification Service
+        url: /notification-service/v3/api-docs
