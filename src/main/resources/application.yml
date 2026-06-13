@@ -42,10 +42,22 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus,env,loggers
   endpoint:
     health:
       show-details: always
+      probes:
+        enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: API Gateway for Microservices
+    version: 1.0.0
 
 springdoc:
   swagger-ui:

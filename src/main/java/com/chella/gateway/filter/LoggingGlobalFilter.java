@@ -15,7 +15,7 @@ public class LoggingGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         long startTime = System.currentTimeMillis();
-        String requestMethod = exchange.getRequest().getMethodValue();
+        String requestMethod = exchange.getRequest().getMethod().name();
         String requestUrl = exchange.getRequest().getURI().getPath();
 
         log.info("Incoming Request:\n{} {}", requestMethod, requestUrl);
